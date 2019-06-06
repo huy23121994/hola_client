@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { authentication, userInfo } from '../service/app.service';
+import { authentication } from '../service/app.service';
 import { connect } from '../connect';
 
 class Login extends Component {
 
+  state = {
+    redirectToReferrer: authentication.data.isAuthenticated,
+  }
+
   handleSubmit = (e) => {
     e.preventDefault()
     setTimeout( _ => {
-      let newToken = 'xxx'
-      authentication.update({token: newToken})
-      localStorage.setItem('authToken', newToken)
-    }, 1000)
+      authentication.update({isAuthenticated: true})
+      this.setState({redirectToReferrer: true})
+    }, 0)
   }
 
   render() {
     const { from } = this.props.location.state || { from: { pathname: '/' } }
-    const { redirectToReferrer } = false
-
+    const { redirectToReferrer } = this.state
     if (redirectToReferrer === true) {
       return <Redirect to={from} />
     }

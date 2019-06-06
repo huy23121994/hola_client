@@ -1,37 +1,21 @@
-import React, { Component, Fragment} from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-import { Redirect } from 'react-router';
+import React, { Component } from 'react';
+import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom';
 import { connect } from '../connect';
 import Profile from './Profile';
-import { userInfo, authentication } from '../service/app.service';
+import { authentication } from '../service/app.service';
 import Setting from './Setting';
 import Login from './Login';
 import PrivateRoute from './PrivateRoute';
 
-class Main extends Component{
+class Main extends Component {
 
-  constructor(){
-    super()
-    this.checkAuthentication()
+  handleLogout = () => {
+    authentication.update({ isAuthenticated: false })
   }
 
-  checkAuthentication = () => {
-    let token = localStorage.getItem('authToken')
-    if(token){
-      authentication.update({token: token})
-      Promise.resolve({userName: 'Tran Bao Huy'}).then(data => {
-        console.log(data);
-      })
-      console.log(authentication)
-      console.log(userInfo)
-    }
-  }
-
-  render(){
-    console.log(window.location.pathname)
-    let user = userInfo.data
-    let token = authentication.data.token
-    return(
+  render() {
+    let isAuthenticated = authentication.data.isAuthenticated
+    return (
       <Router>
         <ul>
           <li>
@@ -43,9 +27,15 @@ class Main extends Component{
           <li>
             <Link to="/setting">Setting</Link>
           </li>
-          <li>
-            <Link to="/login">Login</Link>
-          </li>
+          {isAuthenticated ?
+            <li>
+              <a href="#" onClick={this.handleLogout}>Logout</a>
+            </li>
+            :
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+          }
           <Route exact path="/" component={() => <h3>Home Page</h3>} />
           <PrivateRoute path="/profile" component={Profile} />
           <PrivateRoute path="/setting" component={Setting} />
@@ -56,4 +46,4 @@ class Main extends Component{
   }
 }
 
-export default connect(Main, userInfo);
+export default connect(Main, authentication);

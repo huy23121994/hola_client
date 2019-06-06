@@ -6,4 +6,5 @@ export const userInfo = createService({
 
 export const authentication = createService({
   token: '',
+  isAuthenticated: false
 });

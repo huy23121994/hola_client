@@ -12,7 +12,7 @@ class AppService {
         this['data'] = data;
 
         this['update'] = (newData) => {
-            this['data'] = newData;
+            this['data'] = {...this['data'], ...newData};
             this.listEvent.forEach(f => f());
         }
     }
