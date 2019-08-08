@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { authentication } from '../service/app.service';
-import { connect } from '../connect';
+import { authentication } from '../../service/app.service';
+import { connect } from '../../connect';
 
 class Login extends Component {
 

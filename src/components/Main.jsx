@@ -4,8 +4,8 @@ import { connect } from '../connect';
 import Profile from './Profile';
 import { authentication } from '../service/app.service';
 import Setting from './Setting';
-import Login from './Login';
-import PrivateRoute from './PrivateRoute';
+import Login from './Auth/Login';
+import PrivateRoute from './Auth/PrivateRoute';
 
 class Main extends Component {
 
