@@ -1,43 +1,71 @@
-import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { authentication } from '../../service/app.service';
-import { connect } from '../../connect';
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import { authentication } from "../../service/app.service";
+import { login, getUserInfo } from "../../service/auth";
+import { connect } from "../../connect";
 
 class Login extends Component {
-
   state = {
-    redirectToReferrer: authentication.data.isAuthenticated,
+    error: ""
+  };
+
+  idRef = React.createRef();
+
+  componentDidMount() {
+    if (this.idRef.current) {
+      this.idRef.current.focus();
+    }
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault()
-    setTimeout( _ => {
-      authentication.update({isAuthenticated: true})
-      this.setState({redirectToReferrer: true})
-    }, 0)
-  }
+  handleSubmit = e => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    let email = formData.get("email");
+    let password = formData.get("password");
+    login(email, password)
+      .catch(e => {
+        this.setState({ error: e.message });
+      });
+  };
 
   render() {
-    const { from } = this.props.location.state || { from: { pathname: '/' } }
-    const { redirectToReferrer } = this.state
+    const { from } = this.props.location.state || { from: { pathname: "/" } };
+    const redirectToReferrer = this.props.isAuthenticated;
+
     if (redirectToReferrer === true) {
-      return <Redirect to={from} />
+      return <Redirect to={from} />;
     }
 
     return (
       <div className="row">
-        <div className="col-6">
-          <h2>Login</h2>
+        <div className="col-6 offset-3">
+          <h2 className="text-center mb-5">Login</h2>
           <form onSubmit={this.handleSubmit}>
             <div className="form-group">
               <label>Email</label>
-              <input id="email" type="text" className="form-control" placeholder="email@example.com" />
+              <input
+                ref={this.idRef}
+                name="email"
+                type="text"
+                className="form-control"
+                placeholder="email@example.com"
+              />
             </div>
             <div className="form-group">
               <label>Password</label>
-              <input id="password" type="password" className="form-control" placeholder="Password" />
+              <input
+                name="password"
+                type="password"
+                className="form-control"
+                placeholder="Password"
+              />
             </div>
-            <button type="submit" className="btn btn-primary">Log in</button>
+            {this.state.error && (
+              <div className="text-danger mb-5">{this.state.error}</div>
+            )}
+            <button type="submit" className="btn btn-primary">
+              Log in
+            </button>
           </form>
         </div>
       </div>
@@ -45,4 +73,7 @@ class Login extends Component {
   }
 }
 
-export default connect(Login, authentication);
+export default connect(
+  Login,
+  authentication
+);
