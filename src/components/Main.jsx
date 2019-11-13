@@ -10,15 +10,23 @@ import Logout from "./Auth/Logout";
 import { getUserInfo } from "../service/auth";
 
 class Main extends Component {
+  state = {
+    authenticating: false
+  };
+
   componentDidMount() {
     let token = window.localStorage.getItem("auth_token");
     if (token) {
-      getUserInfo();
+      this.setState({ authenticating: true });
+      getUserInfo().then(() => {
+        this.setState({ authenticating: false });
+      });
     }
   }
 
   render() {
     let isAuthenticated = authentication.data.isAuthenticated;
+    let { authenticating } = this.state;
     return (
       <BrowserRouter>
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -71,7 +79,13 @@ class Main extends Component {
           <PrivateRoute path="/setting" component={Setting} />
           <Route
             path="/login"
-            render={(props) => <Login {...props} isAuthenticated={isAuthenticated} />}
+            render={props => (
+              <Login
+                {...props}
+                isAuthenticated={isAuthenticated}
+                authenticating={authenticating}
+              />
+            )}
           />
         </div>
       </BrowserRouter>

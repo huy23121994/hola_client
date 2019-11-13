@@ -22,18 +22,20 @@ class Login extends Component {
     const formData = new FormData(e.target);
     let email = formData.get("email");
     let password = formData.get("password");
-    login(email, password)
-      .catch(e => {
-        this.setState({ error: e.message });
-      });
+    login(email, password).catch(e => {
+      this.setState({ error: e.message });
+    });
   };
 
   render() {
     const { from } = this.props.location.state || { from: { pathname: "/" } };
     const redirectToReferrer = this.props.isAuthenticated;
-
     if (redirectToReferrer === true) {
       return <Redirect to={from} />;
+    }
+
+    if (this.props.authenticating) {
+      return null;
     }
 
     return (
