@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import { authentication } from "../../service/app.service";
-import { login, getUserInfo } from "../../service/auth";
+import { login } from "../../service/auth";
 import { connect } from "../../connect";
 
 class Login extends Component {

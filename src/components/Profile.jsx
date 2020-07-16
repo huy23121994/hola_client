@@ -4,6 +4,7 @@ import { userInfo } from '../service/app.service';
 
 class Profile extends Component{
   render(){
+    console.log(userInfo.data)
     return(
       <div>
         <h3>Profile Page</h3>

@@ -42,7 +42,7 @@ export function getUserInfo() {
           token: window.localStorage.getItem("auth_token"),
           refreshToken: window.localStorage.getItem("refresh_token")
         });
-        userInfo.update({ resData });
+        userInfo.update({ ...resData });
         resolve(resData);
       })
       .catch(err => reject(err));
